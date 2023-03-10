@@ -1,0 +1,22 @@
+package com.mvcapp.mycafe.controller;
+
+import org.springframework.stereotype.Component;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+@Component
+public class MyCafeController {
+	
+	// this handlers simply returns/redirects user to welcome paeg
+	@RequestMapping("/cafe")
+	public String getWelcomePage() {
+		return "Welcome-page";
+	}
+	
+	
+	@RequestMapping("/processOrder")
+	public String processOrder(Model model) {
+		return "Process-Order";
+	}
+
+}

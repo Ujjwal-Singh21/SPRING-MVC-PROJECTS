@@ -1,0 +1,5 @@
+package com.mvcapp.mycafe.controller;
+
+public class MyCafeController {
+
+}

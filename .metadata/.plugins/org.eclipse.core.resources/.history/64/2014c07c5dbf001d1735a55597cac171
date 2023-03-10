@@ -1,0 +1,8 @@
+package com.mvcapp.mycafe.controller;
+
+import org.springframework.stereotype.Component;
+
+@Component
+public class MyCafeController {
+
+}

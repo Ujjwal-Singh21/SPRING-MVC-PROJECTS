@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename resource &apos;myfirst-mvc-project/src/main/webapp/WEB-INF/dad-frontcontroller-servlet.xml&apos; to &apos;beans.xml&apos;" description="Rename resource &apos;dad-frontcontroller-servlet.xml&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="src/main/webapp/WEB-INF/dad-frontcontroller-servlet.xml" name="beans.xml" stamp="1678454771148" updateReferences="true"/>
+</session>

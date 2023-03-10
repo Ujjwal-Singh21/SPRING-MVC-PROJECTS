@@ -1,0 +1,12 @@
+<classpath>
+  <container id="HomeDotCom!org.eclipse.jst.j2ee.internal.web.container">
+    <entry id="C:/Workspaces/Spring-MVC-Workspace/HomeDotCom/src/main/webapp/WEB-INF/lib/spring-webmvc-5.2.9.RELEASE.jar">
+      <source-attachment-path>C:/Users/uprataps/Downloads/FILES/Zips/spring-framework-main</source-attachment-path>
+    </entry>
+  </container>
+  <container id="myfirst-mvc-project!org.eclipse.jst.j2ee.internal.web.container">
+    <entry id="C:/Workspaces/Spring-MVC-Workspace/myfirst-mvc-project/src/main/webapp/WEB-INF/lib/spring-webmvc-5.2.9.RELEASE.jar">
+      <source-attachment-path>C:/Users/uprataps/Downloads/FILES/Zips/spring-framework-main</source-attachment-path>
+    </entry>
+  </container>
+</classpath>

@@ -1,0 +1,198 @@
+
+=> Implementation class used for ApplicationContext(I) with XML -> ClassPathXmlApplicationContext();
+=> Implementation class used for ApplicationContext(I) with annotations -> AnnotationConfigApplicationContext();
+
+
+- Above is what we have seen earlier during spring core.
+
+- Where we manually create ApplicationContext(I) object and also destroys it manually.
+
+- In web world or web projects we have something called as WebApplicationContext(I) which extends ApplicationContext(I).
+
+- Hence it has all the features of ApplicationContext(I) along with some additional features for web application.
+
+- But when we are dealing with a web-project like spring-mvc, we don't need to do things manually.
+
+- By default there is a classs developed and given by Spring developers called as DispatcherServlet(C).
+
+- This class acts as front controller that routes all incoming requests to apropriate available controllers based on url-pattern.
+
+- This class mapping we have done in web.xml file.
+
+- Hence this class is responsible for creating and destroying our WebApplicationContext(I) container object automatically.
+
+
+url-mapping for DispatcherServlet class in web.xml:
+---------------------------------------------------
+absolute-ordering></absolute-ordering>
+  
+  <servlet>
+	  	<servlet-name>dad-frontcontroller</servlet-name>
+	  	<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+	  	<load-on-startup>1</load-on-startup>
+  </servlet>
+  
+  <servlet-mapping>
+  		<servlet-name>dad-frontcontroller</servlet-name>
+  		<url-pattern>/home.com/*</url-pattern>
+  </servlet-mapping>
+
+
+- By default, DispatcherServlet gets initialised when we hit the url in browser when server is running live.
+
+- But by mentioning -> <load-on-startup>1</load-on-startup>, it will get initialised immediately when server starts.
+
+- Then it will search for a file in WEB-INF foler with the name we have given for dispatcher servlet with a suffix -servlet.xml.
+
+   eg: dad-frontcontroller-servlet.xml
+
+- Hence we create that xml file and mention
+ ->  <context:component-scan base-package="com.mvcapp.controllers"></context:component-scan>
+
+- Hence DispatcherServlet will get initialised, go to this file and check for base package for component-scan and create 
+  WebApplicationContext container by using all classes annotated with @Component or @Controller under base package.
+
+- A controller is called as Handler, and method inside controller is called as Handler methods.
+
+- All handler methods have some url-mapping by using annotation @RequestMapping("Url-here").
+
+- All Handlers handler methods's url patterns are registered with dispatcher servlet by what dispatcher servlet decides which handler
+  method to call for which request from client in browser.
+
+- All handlers are annotated with @Controller hence we need to use @ResposneBody at method level / handler methods.
+
+- If @RestController is used, it internally has @Controller + @ResponseBody.
+
+
+dad-frontcontroller-servlet.xml:
+--------------------------------
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd" id="WebApp_ID" version="4.0">
+  <display-name>myfirst-mvc-project</display-name>
+  <welcome-file-list>
+    <welcome-file>index.html</welcome-file>
+    <welcome-file>index.jsp</welcome-file>
+    <welcome-file>index.htm</welcome-file>
+    <welcome-file>default.html</welcome-file>
+    <welcome-file>default.jsp</welcome-file>
+    <welcome-file>default.htm</welcome-file>
+  </welcome-file-list>
+  
+  <absolute-ordering/>
+  
+  <servlet>
+    <servlet-name>dad-frontcontroller</servlet-name>
+    <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>dad-frontcontroller</servlet-name>
+    <url-pattern>/home.com/*</url-pattern>
+  </servlet-mapping>
+
+</web-app>
+
+
+
+Changing the configuration file name of DispatcherServlet:
+==========================================================
+
+- We know that by default DispatcherServlet search for a file in WEB-INF foler with the name we have given for dispatcher servlet 
+  with a suffix -servlet.xml
+
+- If we change the file name, then DispatcherServlet will not be able to find it and we will get IOException.
+
+- To let DispatcherServlet know that we have changed its configuration file name we need to make use of ServletConfig concept that
+  we have learn in Jsp servlet tutorial.
+
+- ServletConfig is something setting individual separate data for a servlet in web.xml
+
+- first we change file name from dad-frontcontroller-servlet.xml to beans.xml
+
+- Then we write like this:
+
+
+
+configuration for DispatcherServlet inside web.xml:
+---------------------------------------------------
+<servlet>
+    <servlet-name>dad-frontcontroller</servlet-name>
+    <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+    
+    <init-param>
+    		<param-name>contextConfigLocation</param-name>
+    		<param-value>/WEB-INF/beans.xml</param-value>
+    </init-param>
+    
+     <load-on-startup>1</load-on-startup>
+  </servlet>
+  
+  <servlet-mapping>
+    <servlet-name>dad-frontcontroller</servlet-name>
+    <url-pattern>/home.com/*</url-pattern>
+  </servlet-mapping>
+
+
+
+
+View resolver:
+==============
+
+- Till now we were using @ResponseBody, so resposne was erialized on http response object.
+
+- We can instead create a view folder inside WEB-INF and create a jsp/html file.
+
+- In handler return we can write full path of that jsp/html file and we will get the output.
+
+   eg: @RequestMapping("/cricketbat")
+	  public String getCricketBat() {
+		return "/WEB-INF/view/MRFCricketbat.jsp";
+	  }
+
+- But in future if we change file location from WEB-INF to META-INF, or change file extension from jsp to html, we need to update
+  those changes in controller too like this,
+
+  eg: "/META-INF/view/MRFCricketbat.html"
+
+- This is very static and not at all flexible and good approach.
+
+- Hence we make use of VIEWRESOLVER from spring mvc called as 'InternalResourceViewResolver(C) extends UrlBasedViewResolver(C)'.
+
+- The UrlBasedViewResolver(C) has 2 properties prefix and suffix and has setter methods for them too.
+
+- These both properties gets inherited to our InternalResourceViewResolver(C) through inheritence concept.
+
+- Hence we simply return ViewFileName from method handler as -> MRFCricketbat
+
+- We know that prefix(file location) and suffix(file extension) keeps on changing.
+
+- Since we remove prefix and suffix, dispatcher servlet will not know where exactly the file is located.
+
+- To solve that we write configuration for InternalResourceViewResolver(C) inside beans.xml and mention prefix and suffix there.
+
+
+eg:
+---
+  
+    <bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+    	<property name="prefix" value="/WEB-INF/view/"></property>
+    	<property name="suffix" value=".jsp"></property>
+    </bean>
+
+
+- Hence hereafter if there are any changes inf file location of file extension, we simply make changes in beans.xml instead of making
+  changes in controller.
+
+- Now once dispatcher servlet gets just file name from method handler, it will handover it to View resolver by finding its details 
+  from beans.xml file.
+
+- Viewresolver will add prefix and suffix to that file name and give back to DispatcherServlet.
+
+- Now easily dispatcher servlet locates and finds that file and redirect user to that file and show response.
+
+
+Creating a full mvc for food cafe:
+===================================
+
+Refer tutorial video no 9
